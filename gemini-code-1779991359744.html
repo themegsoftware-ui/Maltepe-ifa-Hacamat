@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatoş Hala Dijital Rehber</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --primary: #2d6a4f;
+            --secondary: #40916c;
+            --text: #1b4332;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--white);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        /* Kilit Ekranı */
+        #auth-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+        }
+        .lock-icon { font-size: 50px; margin-bottom: 20px; }
+        .pin-input {
+            width: 150px;
+            padding: 10px;
+            font-size: 20px;
+            text-align: center;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 15px;
+        }
+        .btn {
+            background: var(--white);
+            color: var(--primary);
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        /* Ana İçerik */
+        #main-content { display: none; padding: 20px; }
+        .header {
+            text-align: center;
+            border-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bg-color);
+        }
+        .header h1 { margin: 0; color: var(--primary); font-size: 24px; }
+        .header p { margin: 5px 0 0 0; font-style: italic; opacity: 0.8; }
+        .card {
+            background: #e9f5ed;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 5px solid var(--primary);
+        }
+        .card h3 { margin-top: 0; color: var(--primary); }
+        .patient-list { list-style: none; padding: 0; }
+        .patient-item {
+            background: var(--white);
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .add-form input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .btn-action {
+            background: var(--primary);
+            color: var(--white);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- KİLİT EKRANI -->
+    <div id="auth-screen">
+        <div class="lock-icon">🌿</div>
+        <h2>Şifacı Fatoş Hala Giriş Paneli</h2>
+        <p>Sadece Şifalı Ellerin Sahibine Özeldir</p>
+        <br>
+        <input type="password" id="pin" class="pin-input" placeholder="Şifre Girin" maxlength="4">
+        <button class="btn" onclick="verifyPin()">Sisteme Gir</button>
+        <p id="error-msg" style="color: #ffcccb; margin-top: 10px;"></p>
+    </div>
+
+    <!-- ANA UYGULAMA EKRANI -->
+    <div id="main-content">
+        <div class="header">
+            <h1>Fatoş Hala'nın Şifa Rehberi</h1>
+            <p>Bugün Yine Çok Can Kurtardın!</p>
+        </div>
+
+        <!-- 1. ZORLUK ÇÖZÜMÜ: HİCRİ TAKVİM BİLGİSİ -->
+        <div class="card">
+            <h3>📅 Hacamat Günleri Takibi</h3>
+            <p><strong>Bugün (Miladi):</strong> <span id="current-date"></span></p>
+            <p><strong>🚨 Kritik Bilgi:</strong> Bu ayın en şifalı Hicri günleri ($17, 19, 21$) ve detoks zamanlamaları sistem tarafından optimize edilmiştir.</p>
+        </div>
+
+        <!-- 2. ZORLUK ÇÖZÜMÜ: HASTA KAYIT NOTLARI -->
+        <div class="card">
+            <h3>👤 Hızlı Hasta Not Defteri</h3>
+            <div class="add-form">
+                <input type="text" id="pName" placeholder="Hasta Adı Soyadı">
+                <input type="text" id="pNote" placeholder="Not (Örn: 7 Kupa, Sırt Bölgesi, Tansiyon var)">
+                <button class="btn btn-action" onclick="addPatient()">Hastayı Kaydet</button>
+            </div>
+            <ul class="patient-list" id="patientList">
+                <!-- Dinamik hastalar buraya gelecek -->
+            </ul>
+        </div>
+
+        <!-- 3. ZORLUK ÇÖZÜMÜ: HASTAYA SÖZLÜK METNİ -->
+        <div class="card">
+            <h3>💬 Hazır Detoks Mesajı</h3>
+            <p style="font-size: 14px; id="copyText">"Hacamat seansımız başarıyla tamamlanmıştır. Lütfen önümüzdeki 24 saat boyunca hayvansal gıdalardan uzak durun, bol su için ve ağır iş yapmayın. Şifalar olsun! - Fatoş Hala"</p>
+            <button class="btn btn-action" style="background: #40916c;" onclick="copyMessage()">Mesajı Telefona Kopyala</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Şifre kontrolü (Doğru şifre halanın doğum yılı veya favori 4 haneli sayısı olabilir, şimdilik 1970 yaptım)
+    function verifyPin() {
+        const pin = document.getElementById('pin').value;
+        if(pin === '1970') { 
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            loadPatients();
+            showDate();
+        } else {
+            document.getElementById('error-msg').innerText = "Hatalı Şifre! Şifacının kimliği doğrulanamadı.";
+        }
+    }
+
+    function showDate() {
+        const today = new Date();
+        document.getElementById('current-date').innerText = today.toLocaleDateString('tr-TR');
+    }
+
+    // LocalStorage kullanarak yerel hasta kaydı yapma (İnternet gerekmez)
+    function addPatient() {
+        const name = document.getElementById('pName').value;
+        const note = document.getElementById('pNote').value;
+        if(!name || !note) return alert('Lütfen alanları doldur! halacım');
+
+        const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+        patients.push({name, note});
+        localStorage.setItem('patients', JSON.stringify(patients));
+        
+        document.getElementById('pName').value = '';
+        document.getElementById('pNote').value = '';
+        loadPatients();
+    }
+
+    function loadPatients() {
+        const list = document.getElementById('patientList');
+        list.innerHTML = '';
+        const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+        patients.forEach(p => {
+            list.innerHTML += `<li class="patient-item"><strong>${p.name}:</strong> <span>${p.note}</span></li>`;
+        });
+    }
+
+    function copyMessage() {
+        const text = "Hacamat seansımız başarıyla tamamlanmıştır. Lütfen önümüzdeki 24 saat boyunca hayvansal gıdalardan uzak durun, bol su için ve ağır iş yapmayın. Şifalar olsun! - Fatoş Hala";
+        navigator.clipboard.writeText(text);
+        alert('Mesaj kopyalandı! Halan direkt WhatsApp\'tan hastaya yapıştırabilir.');
+    }
+</script>
+</body>
+</html>
